@@ -1,3 +1,20 @@
 kubectl get nodes
 
 kubectl get pods --all-namespaces
+
+kubectl get componentstatuses
+
+kubectl cluster-info
+
+
+minikube ssh
+
+
+
+# Внутри minikube
+docker images
+
+minikube start
+minikube stop
+
+
