@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-autoscaling
+  labels:
+    app: my-application
+    env: prod
+    owner: MyOwner
+spec:
+  replicas: 2
+  # Выбираем поды, с которыми будет работать деплоймент. Поды мы создадим ниже
+  selector:
+    matchLabels:
+      project: my-project-3
+  # Здесь мы создаём наши поды
+  template:
+    metadata:
+      # Лейблы, которые мы привязываем к подам
+      labels:
+        project: my-project-3
+    # Спецификация нашего пода (какие контейнеры создаём)
+    spec:
+      containers:
+        - name: my-web-container-2
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+
+# Добавляем автоскейлинг
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: my-autoscaling
+spec:
+  # Указываем, какой дейплоймент мы будет автоскейлить
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    # Имя должно совпадать с именем деплоймента выше
+    name: my-deployment-autoscaling
+  minReplicas: 2
+  maxReplicas: 6
+  # Указываем ресурсы, которые можно выделить для реплик
+  metrics:
+    # Выделяемый процент загрузки процессора
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    # Выделяемый процент памяти
+    # Если ресуросов будет хватать, то скейлер добавит больше реплик; если ниже - то убавит реплики
+    - type: Resource
+      resource: 
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

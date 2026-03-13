@@ -1,0 +1,163 @@
+kubectl get nodes
+
+kubectl get pods --all-namespaces
+
+kubectl get componentstatuses
+
+kubectl cluster-info
+
+
+minikube ssh
+
+
+
+# Внутри minikube
+docker images
+
+minikube start
+minikube stop
+
+
+# Создание пода
+kubectl create namespace my-namespace
+kubectl run hello --image=httpd:latest --port=80 -n my-namespace
+
+# Удаление пода
+kubectl delete pods hello -n my-namespace
+
+# Создание пода в default namespace
+kubectl run hello --image=httpd:latest --port=80 -n default
+
+# Информация о поде
+kubectl describe pods hello
+
+# Запустить команду в поде
+kubectl exec hello -- date
+kubectl exec -it hello -- sh
+
+# Логи контейнера/пода
+kubectl logs hello
+
+# Открываем доступ к поду через веб
+kubectl port-forward hello 80:80
+
+
+# Запустить манифест
+kubectl apply -f pod-myweb-lite.yml
+
+# Удалить поды в манифесте (чтобы можно было запустить модифицированный манифест)
+kubectl delete -f pod-myweb-lite.yml
+
+# Запустить манифест
+kubectl apply -f pod-myweb-ver1.yml
+# Снова перенаправляем порты к поду, чтобы сайт пода открывался в браузере
+kubectl port-forward my-web 80:80
+
+# Запускаем другой похожий манифест
+kubectl delete -f pod-myweb-ver1.yml
+kubectl apply -f pod-myweb-ver2.yml
+kubectl port-forward my-web 80:80 8080:8080
+
+# Если нода (сервер) упадёт и затем снова поднимется, то все поды внутри него исчезнут и их нужно будет создавать заново.
+# Поэтому нужен deployment
+# Хотя в minikube такого не произошло (поды не исчезли).
+
+
+# Список деплойментов
+kubectl get deployments
+# или 
+kubectl get deploy
+
+# Добавить деплоймент
+kubectl create deployment my-deployment --image nginx:latest
+
+# Посмотрели созданный деплоймент и увидели ещё один под, созданный деплойментом
+kubectl get deploy
+kubectl get pods
+kubectl describe pods my-deployment-8f9c8c68d-8dvvr
+kubectl describe deployment my-deployment
+
+# Создаём реплики подов в деплойменте
+kubectl scale deployment my-deployment --replicas 3
+# Смотрим появившиеся поды
+kubectl get pods
+kubectl get deploy
+# Смотрип реплика-сеты (набор реплик, кол-во реплик)
+kubectl get rs
+
+# Удаляем какой-нибудь из подов
+kubectl delete pods my-deployment-8f9c8c68d-8dvvr
+# И видим, что вместо него появился новый под
+kubectl get pods
+
+# Создаём автоскейл (масштабирование) деплоймента с указанным количеством ресуров
+kubectl autoscale deployment my-deployment --min=3 --max=5 --cpu=80
+# Проверяем наш деплоймент
+kubectl get deploy
+# Проверяем созданное масштабирование horizontal pod autoscaler (hpa)
+kubectl get hpa
+kubectl rollout history deployment/my-deployment
+kubectl rollout status deployment/my-deployment
+
+# Ищем название контейнера, чтобы его изменить
+kubectl describe deployment my-deployment
+# Меняем (обновляем/откатываем) версию контейнера
+kubectl set image deployment/my-deployment nginx=nginx:1.28 --record
+# Наблюдаем процесс обновления/отката контейнера
+kubectl rollout status deployment/my-deployment
+# Смотрим историю откатов/обновления деплоймента
+kubectl rollout history deployment/my-deployment
+# Снова меняем версию контейнера
+kubectl set image deployment/my-deployment nginx=nginx:latest --record
+# Смотрим историю обновлений/откатов деплоймента
+kubectl rollout history deployment/my-deployment
+
+# Откатываем деплоймент на один шаг
+kubectl rollout undo deployment/my-deployment
+kubectl rollout history deployment/my-deployment
+# Откатываем деплоймент на определённую ревизию
+kubectl rollout undo deployment/my-deployment --to-revision=3
+
+# Обновить latest-версии контейнеров в деплойменте
+kubectl rollout restart deployment/my-deployment
+kubectl rollout status deployment/my-deployment
+
+
+# Запускаем манифест простейшего деплоймента
+kubectl apply -f deployment-simple.yml
+kubectl get deploy
+
+# Запускаем манифест деплоймента с репликами
+kubectl apply -f deployment-replicas.yml
+kubectl get deploy
+
+# Редиректим порт на один из подов реплики
+kubectl get pods
+kubectl port-forward my-deployment-replicas-869c96b59-7hslx 80:80
+
+
+# Запускаем манифест деплоймента с автоскейлером
+kubectl apply -f deployment-autoscaling.yml
+kubectl get deployment
+kubectl get pods
+kubectl get hpa
+kubectl describe deployment my-deployment-autoscaling
+
+
+# Удаляем созданные деплойменты
+kubectl delete -f deployment-simple.yml
+kubectl delete -f deployment-replicas.yml
+kubectl delete -f deployment-autoscaling.yml
+kubectl delete deployment my-deployment
+kubectl delete deployment --all
+
+kubectl delete pod my-web
+# Показать все ReplicaSets
+kubectl get rs
+kubectl get pods
+kubectl get deploy
+
+
+
+
+
