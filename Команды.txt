@@ -41,3 +41,7 @@ kubectl logs hello
 # Открываем доступ к поду через веб
 kubectl port-forward hello 80:80
 
+
+# Запустить манифест
+kubectl apply -f pod-myweb-lite.yml
+
