@@ -121,3 +121,10 @@ kubectl rollout undo deployment/my-deployment --to-revision=3
 # Обновить latest-версии контейнеров в деплойменте
 kubectl rollout restart deployment/my-deployment
 kubectl rollout status deployment/my-deployment
+
+
+# Запускаем манифес деплоймента
+kubectl apply -f deployment-simple.yml
+kubectl get deploy
+
+

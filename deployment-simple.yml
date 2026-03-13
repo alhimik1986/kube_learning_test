@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-simple
+  labels:
+    app: my-application
+spec:
+  # Выбираем поды, с которыми будет работать деплоймент. Поды мы создадим ниже
+  selector:
+    matchLabels:
+      project: my-project
+  # Здесь мы создаём наши поды
+  template:
+    metadata:
+      # Лейблы, которые мы привязываем к подам
+      labels:
+        project: my-project
+    # Спецификация нашего пода (какие контейнеры создаём)
+    spec:
+      containers:
+        - name: my-web-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
