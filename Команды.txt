@@ -52,3 +52,14 @@ kubectl delete -f pod-myweb-lite.yml
 kubectl apply -f pod-myweb-ver1.yml
 # Снова перенаправляем порты к поду, чтобы сайт пода открывался в браузере
 kubectl port-forward my-web 80:80
+
+# Запускаем другой похожий манифест
+kubectl delete -f pod-myweb-ver1.yml
+kubectl apply -f pod-myweb-ver2.yml
+kubectl port-forward my-web 80:80 8080:8080
+
+# Если нода (сервер) упадёт и затем снова поднимется, то все поды внутри него исчезнут и их нужно будет создавать заново.
+# Поэтому нужен deployment
+# Хотя в minikube такого не произошло (поды не исчезли).
+
+
