@@ -45,3 +45,10 @@ kubectl port-forward hello 80:80
 # Запустить манифест
 kubectl apply -f pod-myweb-lite.yml
 
+# Удалить поды в манифесте (чтобы можно было запустить модифицированный манифест)
+kubectl delete -f pod-myweb-lite.yml
+
+# Запустить манифест
+kubectl apply -f pod-myweb-ver1.yml
+# Снова перенаправляем порты к поду, чтобы сайт пода открывался в браузере
+kubectl port-forward my-web 80:80
