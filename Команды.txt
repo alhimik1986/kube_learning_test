@@ -63,3 +63,61 @@ kubectl port-forward my-web 80:80 8080:8080
 # Хотя в minikube такого не произошло (поды не исчезли).
 
 
+# Список деплойментов
+kubectl get deployments
+# или 
+kubectl get deploy
+
+# Добавить деплоймент
+kubectl create deployment my-deployment --image nginx:latest
+
+# Посмотрели созданный деплоймент и увидели ещё один под, созданный деплойментом
+kubectl get deploy
+kubectl get pods
+kubectl describe pods my-deployment-8f9c8c68d-8dvvr
+kubectl describe deployment my-deployment
+
+# Создаём реплики подов в деплойменте
+kubectl scale deployment my-deployment --replicas 3
+# Смотрим появившиеся поды
+kubectl get pods
+kubectl get deploy
+# Смотрип реплика-сеты (набор реплик, кол-во реплик)
+kubectl get rs
+
+# Удаляем какой-нибудь из подов
+kubectl delete pods my-deployment-8f9c8c68d-8dvvr
+# И видим, что вместо него появился новый под
+kubectl get pods
+
+# Создаём автоскейл (масштабирование) деплоймента с указанным количеством ресуров
+kubectl autoscale deployment my-deployment --min=3 --max=5 --cpu=80
+# Проверяем наш деплоймент
+kubectl get deploy
+# Проверяем созданное масштабирование horizontal pod autoscaler (hpa)
+kubectl get hpa
+kubectl rollout history deployment/my-deployment
+kubectl rollout status deployment/my-deployment
+
+# Ищем название контейнера, чтобы его изменить
+kubectl describe deployment my-deployment
+# Меняем (обновляем/откатываем) версию контейнера
+kubectl set image deployment/my-deployment nginx=nginx:1.28 --record
+# Наблюдаем процесс обновления/отката контейнера
+kubectl rollout status deployment/my-deployment
+# Смотрим историю откатов/обновления деплоймента
+kubectl rollout history deployment/my-deployment
+# Снова меняем версию контейнера
+kubectl set image deployment/my-deployment nginx=nginx:latest --record
+# Смотрим историю обновлений/откатов деплоймента
+kubectl rollout history deployment/my-deployment
+
+# Откатываем деплоймент на один шаг
+kubectl rollout undo deployment/my-deployment
+kubectl rollout history deployment/my-deployment
+# Откатываем деплоймент на определённую ревизию
+kubectl rollout undo deployment/my-deployment --to-revision=3
+
+# Обновить latest-версии контейнеров в деплойменте
+kubectl rollout restart deployment/my-deployment
+kubectl rollout status deployment/my-deployment
