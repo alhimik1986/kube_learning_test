@@ -2,9 +2,15 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: my-web
+  labels:
+    # Значения без пробелов. Здесь не env-переменные и не rbac-правила. Это просто теги.
+    env: prod
+    app: main
+    tier: frontend
+    owner: MyName
 spec:
   containers:
     - name: container-apache
-      image: httpd:latest
+      image: nginx:latest
       ports:
         - containerPort: 80
