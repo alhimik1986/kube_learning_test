@@ -135,3 +135,29 @@ kubectl get deploy
 kubectl get pods
 kubectl port-forward my-deployment-replicas-869c96b59-7hslx 80:80
 
+
+# Запускаем манифест деплоймента с автоскейлером
+kubectl apply -f deployment-autoscaling.yml
+kubectl get deployment
+kubectl get pods
+kubectl get hpa
+kubectl describe deployment my-deployment-autoscaling
+
+
+# Удаляем созданные деплойменты
+kubectl delete -f deployment-simple.yml
+kubectl delete -f deployment-replicas.yml
+kubectl delete -f deployment-autoscaling.yml
+kubectl delete deployment my-deployment
+kubectl delete deployment --all
+
+kubectl delete pod my-web
+# Показать все ReplicaSets
+kubectl get rs
+kubectl get pods
+kubectl get deploy
+
+
+
+
+
