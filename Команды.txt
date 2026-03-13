@@ -123,8 +123,15 @@ kubectl rollout restart deployment/my-deployment
 kubectl rollout status deployment/my-deployment
 
 
-# Запускаем манифес деплоймента
+# Запускаем манифест простейшего деплоймента
 kubectl apply -f deployment-simple.yml
 kubectl get deploy
 
+# Запускаем манифест деплоймента с репликами
+kubectl apply -f deployment-replicas.yml
+kubectl get deploy
+
+# Редиректим порт на один из подов реплики
+kubectl get pods
+kubectl port-forward my-deployment-replicas-869c96b59-7hslx 80:80
 

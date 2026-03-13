@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-replicas
+  labels:
+    app: my-application
+    env: prod
+    owner: MyOwner
+spec:
+  replicas: 3
+  # Выбираем поды, с которыми будет работать деплоймент. Поды мы создадим ниже
+  selector:
+    matchLabels:
+      project: my-project-2
+  # Здесь мы создаём наши поды
+  template:
+    metadata:
+      # Лейблы, которые мы привязываем к подам
+      labels:
+        project: my-project-2
+    # Спецификация нашего пода (какие контейнеры создаём)
+    spec:
+      containers:
+        - name: my-web-container
+          image: nginx:latest
+          ports:
+            - containerPort: 80
