@@ -18,3 +18,26 @@ minikube start
 minikube stop
 
 
+# Создание пода
+kubectl create namespace my-namespace
+kubectl run hello --image=httpd:latest --port=80 -n my-namespace
+
+# Удаление пода
+kubectl delete pods hello -n my-namespace
+
+# Создание пода в default namespace
+kubectl run hello --image=httpd:latest --port=80 -n default
+
+# Информация о поде
+kubectl describe pods hello
+
+# Запустить команду в поде
+kubectl exec hello -- date
+kubectl exec -it hello -- sh
+
+# Логи контейнера/пода
+kubectl logs hello
+
+# Открываем доступ к поду через веб
+kubectl port-forward hello 80:80
+
