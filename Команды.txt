@@ -160,4 +160,47 @@ kubectl get deploy
 
 
 
+# Подготавливаем (создаём какой-нибудь простой деплоймент)
+kubectl create deployment my-deployment --image nginx:latest
+kubectl scale deployment my-deployment --replicas 3
+kubectl get pods
+
+# Создаём новый сервис с типом ClusterIP. Раскрываем (открываем) в деплойменте 80-й порт/
+kubectl expose deployment my-deployment --type=ClusterIP --port=80
+kubectl get services
+# или
+kubectl get svc
+# Находим IP-адрес сервиса. Заходим в ноду и выполняем команду, в которой указывем найденный IP-адрес
+curl 10.108.110.203
+# Удаляем созданный сервис
+kubectl delete service my-deployment
+# Проверяем, что сервис удалён, а деплоймент - нет
+kubectl get svc
+kubectl get deploy
+
+# Создаём новый сервис с типом NodePort
+kubectl expose deployment my-deployment --type=NodePort --port 80
+kubectl get services
+kubectl describe nodes
+kubectl describe nodes | grep ExternalIP
+# Здесь мы должны были получить ExternalIP и в kubectl get services получить внешний порт. И по ним должен был открыться сайт.
+# Но он не открывается (http://192.168.49.2:31279).
+
+# Удаляем сервис
+kubectl delete svc my-deployment
+
+
+# Создаём новый сервис с типом LoadBalancer
+kubectl expose deployment my-deployment --type=LoadBalancer --port 80
+kubectl get svc
+# Ждём, пока в EXTERNAL-IP вместо статуса <pending>, появится IP-адрес.
+# Но он так и остался в статусе <pending>. Через его адрес можно было открыть сайт (в режиме балансировки подов).
+
+# Удаляем сервис
+kubectl delete service my-deployment
+kubectl delete deployment my-deployment
+kubectl get pods
+kubectl get svc
+kubectl get deploy
+kubectl get rs
 
