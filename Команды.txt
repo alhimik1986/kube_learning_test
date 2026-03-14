@@ -216,7 +216,14 @@ kubectl apply -f service-loadbalancer-multi.yml
 kubectl get svc
 kubectl get deploy
 
+# Запускаем манифест сервиса с автоскейлингом
+kubectl apply -f service-loadbalancer-autoscaling.yml
+kubectl get svc
+kubectl get pods
 
-
-
+# Удаляем созданные сервисы
+kubectl delete -f service-loadbalancer-single.yml
+kubectl delete -f service-loadbalancer-multi.yml
+kubectl delete -f service-loadbalancer-autoscaling.yml
+kubectl get pods
 
