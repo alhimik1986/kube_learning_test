@@ -205,11 +205,18 @@ kubectl get deploy
 kubectl get rs
 
 
-# Запускаем манифест сервиса кубернетеса
+# Запускаем манифест простого сервиса кубернетеса
 kubectl apply -f service-loadbalancer-single.yml
 kubectl get deploy
 # Здесь мы получим EXTERNAL-IP и порт (для открытия сайта в браузере). Но external-ip не появляется.
 kubectl get svc
+
+# Запускаем манифест сервиса с несколькими контейнерами
+kubectl apply -f service-loadbalancer-multi.yml
+kubectl get svc
+kubectl get deploy
+
+
 
 
 

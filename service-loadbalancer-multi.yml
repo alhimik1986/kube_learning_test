@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment-multi-pod
+  labels:
+    app: my-k8s-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: my-project-2
+  template:
+    metadata:
+      # Сервис будет селектить по этому лейблу
+      labels:
+        project: my-project-2
+    spec:
+      containers:
+        - name: my-web
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+        - name: not-my-web
+          image: tomcat:8.5.38
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-multi-pod-service
+  labels:
+    env: prod
+    owner: MyOwner
+spec:
+  selector:
+    project: my-project-2
+  ports:
+    - name: my-web-app-listener
+      protocol: TCP
+      port: 80
+      targetPort: 80
+
+    - name: not-my-web-app-listener
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
