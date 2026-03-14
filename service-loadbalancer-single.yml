@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  # Сервис НЕ будет селектить по этому лейблу
+  labels:
+    app: my-k8s-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: my-project
+  template:
+    metadata:
+      # Сервис будет селектить по этому лейблу
+      labels:
+        project: my-project
+    spec:
+      containers:
+        - name: container-web
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-single-pod-service
+  labels:
+    env: prod
+    owner: MyOwner
+spec:
+  selector:
+    # Должен совпадать с metadata.spec.template.metadata.labels
+    # Мы выбираем поды с указанными лейблами (project: my-project)
+    project: my-project
+  ports:
+    - name: app-listener
+      protocol: TCP
+      # Порт на LoadBalancer-е
+      port: 80
+      # Порт на Pod-е
+      targetPort: 80
+  type: LoadBalancer
