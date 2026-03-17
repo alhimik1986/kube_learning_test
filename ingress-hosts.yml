@@ -1,0 +1,57 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-hosts
+  namespace: default
+spec:
+  rules:
+    - host: minikube.main.lo
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: main
+                port:
+                  number: 80
+    - host: minikube.web1.lo
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: web1
+                port:
+                  number: 80
+    - host: minikube.web2.lo
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: web2
+                port:
+                  number: 80
+    - host: minikube.webx.lo
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: webx
+                port:
+                  number: 80
+    - host: minikube.tomcat.lo
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: tomcat
+                port:
+                  number: 8080

@@ -227,3 +227,28 @@ kubectl delete -f service-loadbalancer-multi.yml
 kubectl delete -f service-loadbalancer-autoscaling.yml
 kubectl get pods
 
+
+
+# Создаём деплойменты
+kubectl create deployment main --image=nginx:latest
+kubectl create deployment web1 --image=nginx:1.10
+kubectl create deployment web2 --image=nginx:1.20
+kubectl create deployment webx --image=nginx:1.25
+kubectl create deployment tomcat --image=tomcat:8.5.38
+# Создаём реплики к ним
+kubectl scale deployment main --replicas 2
+kubectl scale deployment web1 --replicas 2
+kubectl scale deployment web2 --replicas 2
+kubectl scale deployment webx --replicas 2
+# Создаём сервисы к ним
+kubectl expose deployment main --port=80 --type=ClusterIP
+kubectl expose deployment web1 --port=80 --type=ClusterIP
+kubectl expose deployment web2 --port=80 --type=ClusterIP
+kubectl expose deployment webx --port=80 --type=ClusterIP
+kubectl expose deployment tomcat --port=8080 --type=ClusterIP
+kubectl get svc -o wide
+
+kubectl apply -f ingress-hosts.yml
+kubectl get ingress
+kubectl describe ingress
+
