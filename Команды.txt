@@ -247,8 +247,11 @@ kubectl expose deployment web2 --port=80 --type=ClusterIP
 kubectl expose deployment webx --port=80 --type=ClusterIP
 kubectl expose deployment tomcat --port=8080 --type=ClusterIP
 kubectl get svc -o wide
-
+# Запускаем манифест для ингресса (но он не работает, т. к. не появляются ExternalIP)
 kubectl apply -f ingress-hosts.yml
 kubectl get ingress
 kubectl describe ingress
-
+# Запускаем манифест для ингресса с путями
+kubectl get ingress
+kubectl describe ingress
+kubectl apply -f ingress-paths.yml
