@@ -1,0 +1,6 @@
+# Default values for Helm Chart
+
+container:
+  image: "nginx:latest"
+
+replicaCount: 2

@@ -262,5 +262,32 @@ kubectl apply -f ingress-paths.yml
 cd helm
 helm create Chart-Auto
 
+# Деплоим приложение
+helm install app chart
+helm list
+kubectl get pods
+kubectl get deploy
+kubectl get svc
+# Если не сработает, то выполнить
+helm upgrade -i app chart
+helm delete app
+helm install app chart
+
+# Деплоим другое приложение, но устанавливаем image, отличный от дефолтного (прямо в командной строке)
+helm install app1 chart --set container.image=nginx:1.28.2 --set replicaCount=3
+helm list
+kubectl get svc
+kubectl get pods
+
+# Передеплоим приложение, но с другими параметрами
+helm upgrade app1 chart --set container.image=nginx:1.28.2 --set replicaCount=4
+kubectl get pods
+helm list
+kubectl get svc
+
+
+
+
+
 
 
