@@ -255,3 +255,12 @@ kubectl describe ingress
 kubectl get ingress
 kubectl describe ingress
 kubectl apply -f ingress-paths.yml
+
+
+
+# Создаём ради интереса пустой типовой Helm-chart шаблон
+cd helm
+helm create Chart-Auto
+
+
+
