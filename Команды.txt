@@ -290,7 +290,11 @@ helm install app2 chart -f prod_values.yaml
 helm list
 kubectl get pods
 
-
+# Запаковал проект в архив
+helm package chart
+# Задеплоил проект прямо из запакованного файла
+helm install app3 App-HelmChart-0.1.0.tgz
+helm list
 
 
 
