@@ -297,5 +297,26 @@ helm install app3 App-HelmChart-0.1.0.tgz
 helm list
 
 
+# Поиск репозиториев, список которых сконфигурирован в файле
+helm search repo
+# Если появится ошибка, то выполнить
+helm repo update
+# Поиск репозиториев в официальном репозитории helm
+helm search hub apache
+
+# Добавляем репозиторий bitnami
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm search repo
+helm search repo bitnami
+
+# Деплоим приложение прямо из добавленного репозитория
+helm install my-release bitnami/apache
+helm list
+kubectl get svc
+
+# Деплоим приложение из добавленного репозитория, но файлом параметров для bitnami
+helm install custom-apache bitnami/apache -f apache_mywebpage.yaml
+kubectl get svc
+
 
 
