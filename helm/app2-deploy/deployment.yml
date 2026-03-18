@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app: my-k8s-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: my-project-1
+  template:
+    metadata:
+      labels:
+        project: my-project-1
+    spec:
+      containers:
+        - name: my-project-web-1
+          image: nginx:1.2
+          ports:
+            - containerPort: 80
