@@ -318,5 +318,15 @@ kubectl get svc
 helm install custom-apache bitnami/apache -f apache_mywebpage.yaml
 kubectl get svc
 
+# Удаляем созданные деплойменты
+helm delete app
+# или
+helm uninstall app
+helm delete app1
+helm delete app2
+helm delete app3
+helm delete custom-apache
+helm delete my-release
 
+helm repo remove bitnami
 
