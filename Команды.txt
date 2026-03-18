@@ -285,6 +285,10 @@ kubectl get pods
 helm list
 kubectl get svc
 
+# Деплоим приложение, но с другими параметрами, указанными в отдельном файле
+helm install app2 chart -f prod_values.yaml
+helm list
+kubectl get pods
 
 
 
