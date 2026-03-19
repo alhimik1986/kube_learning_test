@@ -330,3 +330,72 @@ helm delete my-release
 
 helm repo remove bitnami
 
+
+
+# Дополнительные команды
+kubectl run my-nginx-pod --image=nginx:latest --port=80
+kubectl get pod my-nginx-pod -o yaml
+kubectl logs my-nginx-pod
+kubectl logs my-nginx-pod --container=my-nginx-pod
+kubectl exec -it my-nginx-pod --container=my-nginx-pod -- sh
+kubectl exec -it my-nginx-pod --container=my-nginx-pod -- /bin/bash
+kubectl delete pod my-nginx-pod
+
+# Создаём новый кластер
+minikube start --profile k8s-cluster-2
+# Смотрим ноды текущего кластера
+kubectl get nodes
+
+# Смотрим настройки kubectl, находящиеся в файле ~/.kube/config
+kubectl config view
+
+# Указанание нескольких файлов конфигурации для kubectl
+export KUBECONFIG=/home/admin/config_1:home/admin/config_2
+
+# Добавление нового кластера
+kubectl config set-cluster my-external-cluster --server=https://k8s.test.com:9443 --certificate-authority=path/to/ca/file
+
+# Добавление пользователя (через имя пользователя и пароль)
+kubectl config set-credentials my_user --username=my_username --password=my_password
+# Добавление пользователя (через токен)
+kubectl config set-credentials my_user --token=my_token
+
+# Добавляем контекст (подключение к кластеру). Здесь мы указываем namespace, который будет использоваться по умолчанию
+kubectl config set-context my-context --cluster=my-external-cluster --user=my_user --namespace=my-namespace
+
+# Показать текущий контекст (подключение к кластеру)
+kubectl config current-context
+# Показать список всех контекстов (подключений к кластерам)
+kubectl config get-contexts
+# Использовать указанный контекст (чтобы kubectl подлючился к нужному кластеру с нужным пользователем)
+kubectl config use-context my-context
+# Проверяем, что у нас выбран другой контекст
+kubectl config get-contexts
+# Выведет ошибку, потому что мы неправильно прописали путь к файлу сертификата
+kubectl get nodes
+
+# Показать список всех кластеров. И список всех пользователей.
+kubectl config get-clusters
+kubectl config get-users
+
+# Удаляем наш созданный контекст
+kubectl config delete-context my-context
+kubectl config get-contexts
+kubectl config view
+# Удаляем кластер и пользователя
+kubectl config delete-cluster k8s-cluster-2
+kubectl config delete-user my_user
+
+
+# Запустить дашборд миникуба
+minikube dashboard
+minikube addons enable metrics-server
+
+# Запустить дашборд headlamp
+helm install my-headlamp headlamp/headlamp --namespace kube-system
+kubectl create token my-headlamp --namespace kube-system
+minikube service headlamp -n headlamp
+
+
+
+
