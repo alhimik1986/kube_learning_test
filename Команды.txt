@@ -396,6 +396,28 @@ helm install my-headlamp headlamp/headlamp --namespace kube-system
 kubectl create token my-headlamp --namespace kube-system
 minikube service headlamp -n headlamp
 
+kubectl port-forward -n kube-system service/headlamp 8080:80
+# localhost:8080
+
+
+# Прочие вспомогательные команды
+kubectl describe ingress my-ingress
+kubectl describe ing -A
+kubectl get po -A
+curl -I myhost.ru
+netstat -ntlp
+netstat -n
+
+# Найти название ингресс-контроллера
+kubectl get po -A | grep ingress
+
+# Посмотреть логи ингресс контроллера за последние 10 мин (обнвление онлайн)
+kubectl logs -f <ingress_name> -n <namespace> --since 10m
+
+# Применить все файлы в текущей папке
+kubectl apply -f .
+# Удалить все созданные сущности, описанные во всех файлах в текущей папке
+kubectl delete -f .
 
 
 
