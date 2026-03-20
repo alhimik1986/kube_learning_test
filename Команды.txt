@@ -421,3 +421,73 @@ kubectl delete -f .
 
 
 
+## Операции с лейблами (label или метки)
+# Создадим под с помощью команды run (лейбл run=app-kuber-manual будет добавлен автоматически)
+kubectl run app-kuber-manual --image=nginx:latest --port=80
+# Проверяем, что label:run=app-kuber-manual добавлен автоматически
+kubectl get po --show-labels
+# Создаём под с помощью манифеста (лейбл run не добавляется)
+kubectl apply -f bakavets/lesson_7/pod-with-labels.yml
+# Проверяем, что label:run не был добавлен
+kubectl get po --show-labels
+# Выводим список подов, разделяя их метки в отдельных указанных колонках
+kubectl get po -L app,environment,run
+
+# Добавляем ещё метку к поду app-kuber-manual
+kubectl label po app-kuber-manual environment=dev
+# Проверяем, что метка добавилась
+kubectl get po --show-labels
+
+# Выводим только те поды, у которых метка (лейбл) app=http-server
+kubectl get po -l app=http-server
+# Выводим только те поды, у которых нет метки app=http-server
+kubectl get po -l app!=http-server
+
+# Выводим поды, фильтруя метки по условиям на основе набора (in, not in, exist)
+# Выводим поды, у которых существует метка run
+kubectl get po -l run --show-labels
+# Выводим поды, которые не имеют метку run
+kubectl get po -l "!run" --show-labels
+# Выводим поды, у которых метка environment равна dev
+kubectl get po -l "environment in (dev)" --show-labels
+# Выводим поды, у которых метка app не равна http-server
+kubectl get po -l "app notin (http-server)" --show-labels
+# Выводим поды, у которых существуе метка run и метка environment равна dev
+kubectl get po -l run,environment=dev  --show-labels
+
+# Метки можно присваивать к любым другим объектам кубера, например, нодам.
+# К примеру, наш под работает только с нодами, имеющими GPU (видеокарту, графический процессор).  # Тогда мы добавляем метку gpu=true нашей ноде minikube, чтобы к ней можно было приаттачить наш под
+kubectl label node minikube gpu=true
+kubectl get nodes --show-labels
+kubectl get nodes -l gpu=true
+
+# Создаём под, который может быть аттачен только ноде с меткой gpu=true
+kubectl apply -f bakavets/lesson_7/pod-with-gpu.yml
+# Видим, что наш под был назначен нашей ноде minikube
+kubectl get pods
+
+# Добавляем аннотацию к нашему поду. Аннотации не могут селектиться, а только являются дополнительной информацией об объекте (например, описанием объекта или аннотация имени пользователя, создавшего объект)
+kubectl annotate pod app-kuber-manual company-name/creator-email="developer@example.com"
+
+## Работа с пространствами имён
+# Список всех пространств имён
+kubectl get ns
+# Добавляем пространство имён через манифест
+kubectl apply -f bakavets/lesson_7/namespace.yml
+kubectl get ns
+# Добавляем пространство имён через командную строку
+kubectl create namespace qa
+# Добавляем разные поды в разных пространствах имён
+kubectl apply -f bakavets/lesson_7/dev-qa-apps.yml
+kubectl get po --all-namespaces
+
+# Удаляем поды через манифест, создавший их ранее
+kubectl delete -f bakavets/lesson_7/pod-with-labels.yml
+# Удаляем поды, имеющие указанную метку (в пространстве имён dev)
+kubectl delete po -l app=http-server -n=dev
+kubectl get po --all-namespaces --show-labels
+# Удаляя пространство имён мы также удаляем все поды, которые находились в этом пространстве имён
+kubectl delete ns qa
+kubectl delete -f bakavets/lesson_7/namespace.yml
+kubectl get po --all-namespaces --show-labels
+
