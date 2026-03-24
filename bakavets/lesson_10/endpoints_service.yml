@@ -1,0 +1,22 @@
+# Привязываем под к сервису через IP-адрес (не только через имя)
+apiVersion: v1
+kind: Service
+metadata:
+  name: endpoints-service
+spec:
+  ports:
+    - port: 80
+
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  # имя должно совпадать с именем сервиса
+  name: endpoints-service
+subsets:
+  - addresses:
+      # IP-адрес, полученный через команду kubectl describe pod my-pod
+      - ip: 10.244.1.175
+      # - ip: 10.244.1.175
+    ports:
+      - port: 80

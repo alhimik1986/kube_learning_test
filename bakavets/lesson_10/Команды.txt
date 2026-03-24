@@ -1,0 +1,15 @@
+# Внутри пода (можно увидеть суффиксы доменов)
+cat /etc/resolve.conf
+
+apt update
+apt install dnsutils
+# Видим IP-адрес сервиса по указанному домену (домен сервиса)
+nslookup kuber-service.default.svc.cluster.local
+
+kubectl get endpoints
+
+
+
+kubectl apply -f bakavets\lesson_10\my_pod.yml
+kubectl apply -f bakavets\lesson_10\endpoints_service.yml
+kubectl get svc

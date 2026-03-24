@@ -7,6 +7,8 @@ kubectl get pods --watch
 
 kubectl get componentstatuses
 
+kubectl get endpoints
+
 kubectl cluster-info
 
 
