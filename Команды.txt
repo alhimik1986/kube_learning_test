@@ -2,6 +2,9 @@ kubectl get nodes
 
 kubectl get pods --all-namespaces
 
+# Отображать поды в реальном времени
+kubectl get pods --watch
+
 kubectl get componentstatuses
 
 kubectl cluster-info

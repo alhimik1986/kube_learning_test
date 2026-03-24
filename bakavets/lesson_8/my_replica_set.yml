@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-replica-set
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-app-rs
+  template:
+    metadata:
+      name: pod-nginx
+      labels:
+        # ≈сли эту метку помен€ть и сделать apply my_replica_set.yml, то ReplicaSet 
+        # выдаст ошибку: Invalid value: {"matchLabels":{"app":"nginx-app-rs-1"}}: field is immutable
+        app: nginx-app-rs
+    spec:
+      containers:
+        # ≈сли мы помен€ем им€ контейнера и выволним apply my_replication_controller.yml,
+        # то контейнеры в подах не измен€тс€, пока мы не удалим поды и ReplicaSet не создаст новые поды
+        # (с изменЄнными контейнерами)
+        - name: app-image-nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80

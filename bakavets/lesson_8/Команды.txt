@@ -1,0 +1,25 @@
+kubectl apply -f bakavets\lesson_8\my_pod.yml
+kubectl apply -f bakavets\lesson_8\my_replication_controller.yml
+kubectl get replicationcontroller
+kubectl get rc
+kubectl get pods
+kubectl get pods --watch
+
+# Если в конкретном поде произошла ошибка, то мы можем, меняя метку пода, вывести его из ReplicationController и заняться его отладкой (ReplicationController тем временем создаст новый под)
+kubectl label pod my-replica-set-4xkhv app=nginx-app-debug --overwrite
+kubectl get pods --show-labels
+
+
+kubectl delete rc my-replication-controller
+kubectl get pods --show-labels
+
+
+kubectl apply -f bakavets\lesson_8\my_replica_set.yml
+kubectl get pods --show-labels
+kubectl delete -f bakavets\lesson_8\my_replica_set.yml
+
+kubectl apply -f bakavets\lesson_8\my_replica_set_expression.yml
+kubectl get pods --show-labels
+kubectl delete -f bakavets\lesson_8\my_replica_set_expression.yml
+
+

@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: my-replication-controller
+spec:
+  replicas: 3
+  selector:
+    app: nginx-app
+  template:
+    metadata:
+      name: pod-nginx
+      labels:
+        # Если эту метку поменять и сделать apply my_replication_controller.yml, то ReplicationController
+        # создаст новые поды, а старые оставит (и их нужно будет удалять вручную)
+        app: nginx-app
+    spec:
+      containers:
+        # Если мы поменяем имя контейнера и выволним apply my_replication_controller.yml,
+        # то контейнеры в подах не изменятся, пока мы не удалим поды и ReplicaSet не создаст новые поды
+        # (с изменёнными контейнерами)
+        - name: app-image-nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
