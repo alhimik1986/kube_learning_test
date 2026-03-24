@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service-load-balancer
+spec:
+  # (Local или Cluster). Cluster (стоит по умолчанию) скрывает IP-адрес клиента, чтоб затрудняет отладку,
+  # но зато лучше распределяет трафик. Local - сохраняет исходный IP-адрес клиента и избегает
+  # перехода трафика с одной ноды на другую (т. е. трафик в каждой ноде идёт строго в один и тот же под или поды этой же ноды
+  # в поды других нод трафик не перескакивает), из-за этого есть риск несбалансированного трафика, когда в нодах находится неодинаковое кол-во подов
+  externalTrafficPolicy: Local
+  selector: 
+    app: http-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer

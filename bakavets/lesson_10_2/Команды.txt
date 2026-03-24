@@ -45,5 +45,7 @@ curl http://my-service-external-name
 telnet my-service-external-name 80
 
 
+kubectl apply -f bakavets\lesson_10_2\my_service_load_balancer.yml
+
 
 
