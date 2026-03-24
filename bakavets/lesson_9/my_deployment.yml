@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+  labels:
+    app: my-app
+spec:
+  replicas: 5
+  # Через сколько секунд под будет готов принимать трафик
+  minReadySeconds: 10
+  strategy:
+    # Стратегия подразумевает плавное обновление
+    rollingUpdate:
+      # Сколько подов будет создаваться дополнительно
+      maxSurge: 1
+      # Сколько подов будет удаляться
+      maxUnavailable: 1
+    type: RollingUpdate
+    # Стратегия подразумевает сначала удаление старых подов, а потом создание новых
+    # type: Recreate
+  selector:
+    matchLabels:
+      app: http-server
+  template:
+    metadata:
+      labels:
+        app: http-server
+    spec:
+      containers:
+        # Чтобы заставить деплоймент обновить приложение, нужно изменить данные в параметре template
+        # Например, можно поменять версию image: nginx:1.29
+        - name: nginx-container
+          image: nginx:1.26
+          ports:
+            - containerPort: 80

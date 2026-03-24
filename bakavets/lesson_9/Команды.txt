@@ -1,0 +1,11 @@
+kubectl apply -f bakavets\lesson_9\my_deployment.yml --record
+kubectl apply -f bakavets\lesson_9\my_service.yml
+
+minikube ip
+
+kubectl get pods -l app=http-server --watch
+
+
+kubectl rollout status deployment my-deployment
+
+
