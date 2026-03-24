@@ -1,0 +1,49 @@
+kubectl apply -f bakavets\lesson_10_2\my_deployment.yml
+kubectl apply -f bakavets\lesson_10_2\my_service.yml
+kubectl get pods
+
+# Входим в один из подов
+kubectl exec -it my-deployment-788b88bc55-7ppw5 -- bash
+
+# Внутри пода выполняем команду
+curl http://my-service
+apt update
+apt install dnsutils
+nslookup my-service
+
+# Видим, что у службы есть CLUSTER-IP
+kubectl get svc
+
+
+kubectl apply -f bakavets\lesson_10_2\my_service_headless.yml
+# Видим, что появилась служба с пустым CLUSTER-IP
+kubectl get svc
+kubectl delete pods -l app=http-server
+# Подключаемся к одному из подов нашего headless-сервиса
+kubectl exec -it my-deployment-788b88bc55-b54qr -- bash
+apt update && apt install dnsutils -y
+nslookup my-service-headless
+cat /etc/resolv.conf
+curl http://my-service-headless.default.svc.cluster.local
+curl http://my-service-headless 8000
+nslookup http://my-service-headless.default.svc.cluster.local
+# В итоге curl должен был вернуть ответ от 3-х подов одновременно, но он вернул ответ только одного из них
+
+
+
+
+kubectl apply -f bakavets\lesson_10_2\my_service_external_name.yml
+kubectl delete pods -l app=http-server
+kubectl get pods
+kubectl exec -it my-deployment-788b88bc55-29fzg -- bash
+apt update && apt install telnet dnsutils -y
+# Видим Name: example.com
+nslookup my-service-external-name
+# Вернётся ошибка
+curl http://my-service-external-name
+# Ошибки не будет
+telnet my-service-external-name 80
+
+
+
+

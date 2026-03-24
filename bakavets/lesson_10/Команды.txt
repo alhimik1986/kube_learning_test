@@ -1,5 +1,9 @@
+kubectl get pods
+# Входим в один из подов
+kubectl exec -it my-pod -- bash
+
 # Внутри пода (можно увидеть суффиксы доменов)
-cat /etc/resolve.conf
+cat /etc/resolv.conf
 
 apt update
 apt install dnsutils
