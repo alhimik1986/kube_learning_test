@@ -1,0 +1,19 @@
+kubectl apply -f bakavets\lesson_14\deployment-startup-http.yml
+kubectl get pods
+kubectl exec -it http-server-startup-http-6dd4f77f47-jvbbq -- bash
+
+cat /etc/hosts
+# Вернёт 0 (предыдущая команда была успешной)
+echo $?
+
+cat /server-test.py
+# Вернёт 1 (предыдущая команда была неуспешной)
+echo $?
+
+
+
+
+
+
+
+

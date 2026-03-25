@@ -27,6 +27,8 @@ kubectl port-forward --address 0.0.0.0 service/<service-name> <host-port>:<servi
 kubectl port-forward --address 0.0.0.0 service/my-service 8000:80
 
 
+netstat -ntulp
+
 
 # Внутри minikube
 docker images
