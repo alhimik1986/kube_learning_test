@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ubuntu
+  labels:
+    app: ubuntu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ubuntu
+  template:
+    metadata:
+      labels:
+        app: ubuntu
+    spec:
+      containers:
+        - name: ubuntu
+          image: ubuntu
+          args:
+            - "/bin/sh"
+            - "-c"
+            - "touch /tmp/healthy; sleep: 30; rm -rf /tmp/healthy; sleep 600"
+          livenessProbe:
+            exec:
+              command:
+                - "cat"
+                - "/tmp/healthy"
+            # Секунд от старта контейнера до начала liveness-пробы (минимум 0, по умолч 0)
+            initialDelaySeconds: 5
+            # Период времени между двумая последовательными проведениями проб (минимум 1, по умолч 10)
+            periodSeconds: 5
+            # Кол-во секунд ожидания пробы (минимум 1, по умолч 1)
+            timeoutSeconds: 1
+            # Минимальное кол-во последовательных проверок, чтобы проба считалась успешной после неудачной (минимум 1, по умолч 1)
+            successThreshold: 1
+            # Минимальное кол-во неудачных проверок подряд, чтобы считать контейнер невалидным (минимум 1, по умолч 3)
+            failureThreshold: 3

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: http-server-tcp
+  labels:
+    app: http-server-tcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server
+  template:
+    metadata:
+      labels:
+        app: http-server
+    spec:
+      containers:
+        - name: kuber-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          livenessProbe:
+            tcpSocket:
+              port: 81
+            # Секунд от старта контейнера до начала liveness-пробы (минимум 0, по умолч 0)
+            initialDelaySeconds: 15
+            # Период времени между двумая последовательными проведениями проб (минимум 1, по умолч 10)
+            periodSeconds: 10
+            # Кол-во секунд ожидания пробы (минимум 1, по умолч 1)
+            timeoutSeconds: 1
+            # Минимальное кол-во последовательных проверок, чтобы проба считалась успешной после неудачной (минимум 1, по умолч 1)
+            successThreshold: 1
+            # Минимальное кол-во неудачных проверок подряд, чтобы считать контейнер невалидным (минимум 1, по умолч 3)
+            failureThreshold: 3

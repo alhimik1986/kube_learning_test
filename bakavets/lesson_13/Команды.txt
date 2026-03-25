@@ -1,0 +1,27 @@
+# В отдельной консоли выполнить команду
+minikube tunnel
+
+kubectl apply -f bakavets\lesson_13\my_deploy.yml
+# В отдельной консоли выполнить команду
+kubectl port-forward --address 0.0.0.0 service/my-service 8000:80
+# В браузере перейти по адресу:
+http://127.0.0.1:8000/
+
+
+kubectl apply -f bakavets\lesson_13\deployment-liveness-exec.yml
+
+# Видим ошибку: Liveness probe failed: cat: /tmp/healthy: No such file or directory
+kubectl get events --watch
+
+kubectl apply -f bakavets\lesson_13\deployment-liveness-tcp.yml
+kubectl delete -f bakavets\lesson_13\deployment-liveness-tcp.yml
+
+kubectl apply -f bakavets\lesson_13\deployment-liveness-http.yml
+kubectl delete -f bakavets\lesson_13\deployment-liveness-http.yml
+
+kubectl apply -f bakavets\lesson_13\deployment-readiness-http.yml
+
+
+
+
+
