@@ -1,0 +1,9 @@
+kubectl apply -f bakavets\lesson_12\deploy-svc-app-v1.yaml
+kubectl apply -f bakavets\lesson_12\deploy-svc-app-v2.yaml
+kubectl apply -f bakavets\lesson_12\deploy-svc-app-v3.yaml
+kubectl apply -f bakavets\lesson_12\deploy-svc-app-latest.yaml
+kubectl apply -f bakavets\lesson_12\ingress.yaml
+
+kubectl get ing
+
+
