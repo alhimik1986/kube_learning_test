@@ -1,0 +1,10 @@
+kubectl apply -f bakavets\lesson_15\my_deploy.yml
+
+
+
+
+
+
+
+
+
