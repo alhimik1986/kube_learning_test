@@ -1,0 +1,10 @@
+kubectl apply -f bakavets\lesson_18\my_daemon_set.yml
+
+
+
+
+
+
+
+
+

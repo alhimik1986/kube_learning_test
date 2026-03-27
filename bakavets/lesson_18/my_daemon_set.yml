@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+# Отличие DaemonSet от Deployment в том, что DaemonSet распределяет по 1-й поде в каждую ноду
+# В нём не нужно указывать кол-во реплик. Deployment же просто распределяет поды по разным нодам
+# в хаотичном порядке
+kind: DaemonSet
+metadata:
+  name: my-daemon-set
+  labels:
+    app: kuber-daemon-set
+spec:
+  selector:
+    matchLabels:
+      app: kuber-daemon-set
+  template:
+    metadata:
+      labels:
+        app: kuber-daemon-set
+    spec:
+      # DaemonSet можно так же назначать только отдельным нодам, например, к нодам, которые имеют gpu.
+      # В данном случае мы назначаем DaemonSet к нодам с конкретной зоной расположения
+      nodeSelector:
+        topology.kubernetes.io/zone: "eu-west-1c"
+      containers:
+        - name: my-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
