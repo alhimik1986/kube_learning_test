@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-pi-parallelism-completions
+spec:
+  # Будут запущен по 3 параллельные джобы, но всего джоб будет запущено 7
+  parallelism: 2
+  completions: 7
+  backoffLimit: 4
+  template:
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command: ["perl", "-Mbignum=bpi", "-wle", "print(2000)"]
+      restartPolicy: Never

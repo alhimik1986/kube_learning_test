@@ -1,0 +1,17 @@
+kubectl apply -f bakavets\lesson_19\my_job.yml
+kubectl apply -f bakavets\lesson_19\my_job_failure.yml
+kubectl apply -f bakavets\lesson_19\my_job_never.ym
+
+kubectl delete jobs.batch job-with-restartpolicy-onfailure
+kubectl delete jobs.batch job-with-restartpolicy-never
+
+kubectl apply -f bakavets\lesson_19\my_job_completions.yml
+kubectl apply -f bakavets\lesson_19\my_job_parallelism.yml
+kubectl apply -f bakavets\lesson_19\my_job_parallelism_completions.yml
+kubectl apply -f bakavets\lesson_19\my_job_timeout.yml
+kubectl apply -f bakavets\lesson_19\my_job_ttl.yml
+
+
+
+
+

@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-with-restartpolicy-never
+spec:
+  # Максимальное кол-во неудачных перезапусков (по умолчанию 6)
+  # При всех неудачных попытка будут созданы (3+1)=4 пода, но бывают ситуации, когда создаются 3 пода.
+  # Но по факту был создан только 1 под.
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+        - name: job-with-failure
+          image: bisybox
+          command: ["/bin/sh", "-c"]
+          args: ["echo 'Running Job; sleep 5; exit 1;"]
+      # Под, в случае ошибки, не удаляется. Это позволяет отладить под.
+      restartPolicy: Never

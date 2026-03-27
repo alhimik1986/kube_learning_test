@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-pi-ttl
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 30
+  # Автоматически удалять джобу через 20 сек после завершения (удачного или неудачного)
+  ttlSecondsAfterFinished: 20
+  template:
+    spec:
+      containers:
+        - name: pi
+          image: perl
+          command: ["perl", "-Mbignum=bpi", "-wle", "print(2000)"]
+      restartPolicy: Never

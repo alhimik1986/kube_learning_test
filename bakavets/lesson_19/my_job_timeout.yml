@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-pi-timeout
+spec:
+  backoffLimit: 4
+  # Общий timeout выполнения джобы (50 сек)
+  activeDeadlineSeconds: 50
+  template:
+    spec:
+      containers:
+        - name: job-with-failure
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args: ["echo 'Running Job'; sleep 5; exit 1;"]
+      restartPolicy: Never
