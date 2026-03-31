@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-cron-job-starting-deadline-success
+spec:
+  schedule: "*/5 * * * *"
+  # Задаём таймаут для запуска джобы. Если джоба в течение 60 сек не запустится, то её запуск будет отменён.
+  # concurrencyPolicy: Forbid в этот раз позволит запустить следующую джобу, поскольку предыдущая джоба
+  # завершится через 40 сек после начала следующей джобы. Но мы задали таймаут 60 сек.
+  # Поэтому 2-й запуск джобы состоится, а 3-й запуск уже не состоится, поскольку 2-я джоба завершится уже через 80 сек после начала 3-й джобы, а таймаут мы задали 60 сек.
+  startingDeadlineSeconds: 60
+  concurrencyPolicy: Forbid
+  # Приостановить действие cron-джобы. true - приостановить, false - возобновить. По умолчанию (false)
+  suspend: false
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "date; echo Hello world; sleep 340"
+          restartPolicy: Never

@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-cron-job-suspend
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Allow
+  # Сохраняет 2 последние успешные джобы
+  successfulJobsHistoryLimit: 2
+  # Сохраняет 2 последние джобы с ошибками
+  failedJobsHistoryLimit: 2
+  # Приостановить действие cron-джобы. true - приостановить, false - возобновить. По умолчанию (false)
+  # Чтобы приостановить джобу, нужно выставить параметр suspend: true и перезапустить этот yml-манифест-файл
+  # Чтобы возобновить джобу, нужно выставить параметр suspend: false и перезапустить этот yml-манифест-файл
+  suspend: false
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              imagePullPolicy: IfNotPresent
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "date; echo Hello world; exit $((RANDOM%2))"
+          restartPolicy: OnFailure

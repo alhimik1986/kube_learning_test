@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: my-cron-job-forbid
+spec:
+  schedule: "*/1 * * * *"
+  # Запрещает запускать следующую джобу, если предыдущая не завершилась
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              imagePullPolicy: IfNotPresent
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "date; echo Hello world; sleep 140"
+          restartPolicy: OnFailure

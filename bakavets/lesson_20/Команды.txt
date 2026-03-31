@@ -1,0 +1,24 @@
+kubectl apply -f bakavets\lesson_20\my_cron_job.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_allow.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_forbid.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_replace.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_suspend.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_starting_deadline_fail.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_starting_deadline_success.yml
+
+kubectl delete cronjob my-cron-job-starting-deadline-failure
+kubectl delete cronjob.batch/my-cron-job-starting-deadline-success
+
+kubectl apply -f bakavets\lesson_20\my_cron_job_with_timeout_fail_counts.yml
+kubectl apply -f bakavets\lesson_20\my_cron_job_without_timeout_fail_counts.ym
+
+
+
+
+
+
+
+
+
+
+
