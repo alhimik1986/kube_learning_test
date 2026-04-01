@@ -12,7 +12,10 @@ kubectl get endpoints
 kubectl cluster-info
 
 
+# Подключиться к кластеру minikube по ssh
 minikube ssh
+# Посмотреть список контейнеров в кластере
+docker ps
 
 minikube ip
 
@@ -28,6 +31,9 @@ kubectl port-forward --address 0.0.0.0 service/my-service 8000:80
 
 
 netstat -ntulp
+
+# Узнать размер папки
+du -sh overlay2/
 
 
 # Внутри minikube

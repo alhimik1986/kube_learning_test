@@ -1,0 +1,72 @@
+kubectl apply -f bakavets\lesson_21\my_deployment_volume_empty_dir.yml
+# Узнаём имена подов (запоминаем один из них)
+kubectl get pods
+
+# Переходим в контейнер пода, чтобы увидеть в нём примонтированную папку cache-1 (нашего созданного хранилища файлов)
+kubectl exec -it my-deployment-volume-empty-dir-7c467b5dbd-8dc62 --container=kuber-app-1 -- /bin/bash
+ls -la
+ls -la | grep cache-1
+cd /cache-1
+echo "hello from kuber" > my_file.txt
+
+kubectl exec -it my-deployment-volume-empty-dir-7c467b5dbd-8dc62 --container=nginx -- /bin/bash
+ls -la | grep cache-2
+cd /cache-2
+ls
+cat my_file.txt
+
+# Узнаём ID пода (запоминаем b06acfa6-881a-4fe2-83c2-7dfc567bc905)
+kubectl get pod my-deployment-volume-empty-dir-7c467b5dbd-8dc62 -o jsonpath='{.metadata.uid}'
+
+# Перейдём в хранилище файлов в нашей ноде
+minikube ssh
+docker ps
+sudo su
+# Здесь отобразятся папки с разными подами
+cd /var/lib/kubelet/pods
+cd b06acfa6-881a-4fe2-83c2-7dfc567bc905
+ls -la volumes/kubernetes.io~empty-dir/cache-volume
+cat volumes/kubernetes.io~empty-dir/cache-volume/my_file.txt
+echo "hello from cluster" > volumes/kubernetes.io~empty-dir/cache-volume/my_file3.txt
+
+minikube ssh
+# Видим Storage Driver: overlay2
+docker info
+docker info | grep "Storage Driver"
+cd /var/lib/docker
+ls
+cd overlay2
+# Здесь мы увидим все слои, скачанные докером
+ls -la
+cd ..
+# Узнать размер папки (слои докера)
+du -sh overlay2/
+
+# Если скачать файл в докер-образ, то размер слоя (в папке overlay2) увеличится раза в 2 больше, чем размер файла
+kubectl exec -it my-deployment-volume-empty-dir-7c467b5dbd-8dc62 --container=nginx -- /bin/bash
+wget http://speedtest.wdc01.softlayer.com/downloads/test500.zip
+
+# Если скачать файл в хранилище файлов (volume), то размер хранилища (в папке cache-volume) увеличится раза на столько же, сколько размер файла
+kubectl exec -it my-deployment-volume-empty-dir-7c467b5dbd-8dc62 --container=nginx -- /bin/bash
+cd /cache-2
+wget http://speedtest.wdc01.softlayer.com/downloads/test500.zip
+exit
+minikube ssh
+cd /var/lib/kubelet/pods/volumes/kubernetes.io~empty-dir/cache-volume/
+du -sh .
+
+
+
+kubectl apply -f bakavets\lesson_21\my_deployment_volume_empty_dir_mount_path.yml
+
+
+
+
+
+
+
+
+
+
+
+
