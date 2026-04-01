@@ -1,0 +1,44 @@
+kubectl apply -f bakavets\lesson_22\my_deployment_two_containers.yml
+
+# Проверяем, что примонтированная папка в контейнере nginx-containe имеет доступ только на чтение
+kubectl exec -it two-containers --container=nginx-container -- /bin/bash
+cd /usr/share/nginx/html
+ls -la
+rm -f index.html
+
+# А также проверяем, что соседний контейнер (debian-container) перезаписывает наш файл index.html, потому что он имеет доступ на запись файла
+cat index.html
+curl localhost
+
+
+kubectl apply -f bakavets\lesson_22\my_deployment_two_containers_memory.yml
+
+# Заходим в кластер миникуба и проверяем, что в нём есть примонтированное хранилище /data, в котором файлы не будут удаляться после удаления пода
+kubectl apply -f bakavets\lesson_22\my_pod_hostpath_volume.yml
+minikube ssh
+sudo su
+cd /data
+ls -la
+echo ok > my_file.txt
+
+# В отдельной консоли мы проверяем, что наш созданный файл существует в нашем примонтированнм хранилище
+kubectl exec -it hostpath-pod --container=test-container -- /bin/bash
+cd /test-pd
+cat my_file.txt
+echo "Hello from pod" > pod_file.txt
+
+# Пересоздаём наш под и убеждаемся, что файлы в хранилище сохранились
+kubectl delete -f bakavets\lesson_22\my_pod_hostpath_volume.yml
+kubectl apply -f bakavets\lesson_22\my_pod_hostpath_volume.yml
+kubectl exec -it hostpath-pod --container=test-container -- /bin/bash
+cd /test-pd
+ls -la
+
+
+kubectl apply -f bakavets\lesson_22\my_pod_aws_elastic_block_store.yml
+
+
+
+
+
+

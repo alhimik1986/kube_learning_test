@@ -31,6 +31,7 @@ spec:
             - mountPath: /cache-2
               name: cache-volume
               # subPath: data
+      # При удалении пода файлы в хранилище (с типом emptyDir) тоже будут удалены
       volumes:
         - name: cache-volume
           emptyDir: {}

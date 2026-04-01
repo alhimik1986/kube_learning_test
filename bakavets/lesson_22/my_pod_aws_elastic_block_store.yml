@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: http-server
+spec:
+  containers:
+    - image: bakavetcs/kuber
+      name: http-server
+      volumeMounts:
+        - mountPath: /cache
+          name: aws-volume
+  volumes:
+    - name: aws-volume
+      # This AWS EBS volume must alread exist.
+      # Ќедостаток этого метода в том, что к подам нельз€ прив€зать несколько нод и можно прив€зать только к  тому региону (--availability-zone), в котором находитс€ сам диск
+      # „тобы решить эту проблему, нужно использовать диски типов networkFileSystem (дл€ Amazone это ElasticFileSystem (EFS диски) сервис, но дл€ этого устанавливают ContainerStorageInterfaceDriver в кластер kubernetes)
+      # ѕо умолчанию этот драйвер уже встроен в кубернетес, но лучше установить его драйвер напр€мую, чтобы не шла миграци€ хранилища из "in-tree" плагина. ѕотому что "in-tree" плагины в дальнейшем поддерживатьс€ не будут.
+      awsElasticBlockStore:
+        volumeID: "vol-010a0c58f12907a34"
+        fsType: ext4
