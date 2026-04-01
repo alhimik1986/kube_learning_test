@@ -35,6 +35,9 @@ netstat -ntulp
 # Узнать размер папки
 du -sh overlay2/
 
+# Показать размеры папок
+df -h
+
 
 # Внутри minikube
 docker images

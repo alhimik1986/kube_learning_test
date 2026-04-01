@@ -1,0 +1,15 @@
+# https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-claim-v1/
+# В этой заявке storageClassName, accessModes и storage должны полностью совпадать с PersistentVolume,
+# иначе эта созданная заявка (PVC) не будет удовлетворять PV и PV будет висеть в статусе Pending или Available, а не в статусе Bound
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: aws-pvc-kuber
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+

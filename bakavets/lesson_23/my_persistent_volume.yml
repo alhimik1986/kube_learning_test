@@ -1,0 +1,30 @@
+# https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: aws-pv-kuber
+  labels:
+    type: aws-pv-kuber
+spec:
+  capacity:
+    storage: 3Gi
+  # Режим доступа к хранилищу (только текущий под имеет доступ на чтение и запись)
+  accessModes: # https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec
+    - ReadWriteOnce
+  # https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec:~:text=by%20node%27s%20fields.-,persistentVolumeReclaimPolicy,-(string)
+  # Что произойдёт с хранилищем после того, как оно будет хоть раз использовано и будет освобождено (т.е., когда удалят PVC и под, который был к нему привязан)
+  # (
+  # Delete - хранилище будет удалено после освобождения от заявки, 
+  # т.е. после удаления пода и PersistentVolumeClaim хранилище тоже будет удалено.
+  # Оно используется, чтобы предотвратить использование хранилища, которое уже хоть раз была 
+  # привязана к поду. Потому что потенциально на этом хранилище могут храниться файлы,
+  # которые были ранее созданы привязаным ранее подом.
+  # Recycle - хранилище будет очищено от содержимого и, далее, он станет доступен для повторной заявки.
+  # Retain (По умолчанию) - хранилище будет находиться в фазе released после того, как PVC будет удалён. Это нужно, чтобы данные в хранилище можно было восстановить, они не удалятся вместе с PVC.
+  # )
+  persistentVolumeReclaimPolicy: Retain
+  # Empty value means that this volume does not belong to any StorageClass https://kubernetes.io/docs/reference/kubernetes-api/config-and-storage-resources/persistent-volume-v1/#PersistentVolumeSpec:~:text=storageClassName%20(string)
+  storageClassName: ""
+  awsElasticBlockStore:
+    volumeID: "vol-02a71cfd076eac916"
+    fsType: ext4

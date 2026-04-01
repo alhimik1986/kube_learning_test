@@ -1,0 +1,16 @@
+kubectl apply -f bakavets\lesson_23\my_persistent_volume.yml
+kubectl apply -f bakavets\lesson_23\my_persistent_volume_claim.yml
+kubectl apply -f bakavets\lesson_23\my_deployment_pvc.yml
+
+
+kubectl apply -f bakavets\lesson_23\my_storage_class.yml
+kubectl apply -f bakavets\lesson_23\my_storage_class_pvc.yml
+kubectl apply -f bakavets\lesson_23\my_storage_class_pvc_deployment.yml
+
+kubectl apply -f bakavets\lesson_23\cs_ebs_csi_example.yml
+
+
+
+
+
+

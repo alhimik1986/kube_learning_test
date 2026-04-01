@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuber-1
+  labels:
+    app: kuber-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server-1
+  template:
+    metadata:
+      labels:
+        app: http-server-1
+    spec:
+      containers:
+        - name: kuber-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /cache-1
+              name: cache-volume
+      volumes:
+        - name: cache-volume
+          persistentVolumeClaim:
+            claimName: aws-pvc-kuber-1

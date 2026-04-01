@@ -1,0 +1,16 @@
+# https://kubernetes.io/docs/concepts/storage/storage-classes/
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: custom-gp2
+# https://kubernetes.io/docs/concepts/storage/storage-classes/#provisioner
+# Поставщик плагина
+provisioner: kubernetes.io/aws-ebs
+# Параметры нашего диска (тип gp2 - можно найти в консоли амазона в разделе Volumes)
+parameters:
+  type: gp2
+# https://kubernetes.io/docs/concepts/storage/storage-classes/#reclaim-policy
+# По умолчанию Delete (т.е. после освобождения хранилища, оно автоматически удалится)
+reclaimPolicy: Retain
+# Разрешаем автоматически расширять диск
+allowVolumeExpansion: true

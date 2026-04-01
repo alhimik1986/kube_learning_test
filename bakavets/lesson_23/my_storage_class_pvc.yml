@@ -1,0 +1,12 @@
+apiVersion: v1
+# PersistentVolume мы уже не создаём, он будет создан автоматически
+kind: PersistentVolumeClaim
+metadata:
+  name: aws-pvc-kuber-1
+spec:
+  storageClassName: "custom-gp2"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
