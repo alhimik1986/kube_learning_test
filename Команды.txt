@@ -29,6 +29,10 @@ minikube service my-service --url
 kubectl port-forward --address 0.0.0.0 service/<service-name> <host-port>:<service-port>
 kubectl port-forward --address 0.0.0.0 service/my-service 8000:80
 
+kubectl get secret app-tls -o json | jq -r '.data."tls.crt"' | base64 -d | openssl x509 -dates -noout -text | grep DNS:
+
+dig ya.ru
+nslookup ya.ru
 
 netstat -ntulp
 

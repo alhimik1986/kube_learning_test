@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-env
+  labels:
+    app: my-deployment-env
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server-1
+  template:
+    metadata:
+      labels:
+        app: http-server-1
+    spec:
+      containers:
+        - name: my-container
+          image: bakavets/kuber:v1.0-args
+          args: ["$(INTERVAL)", "$(COUNT)", "$(TEXT_ARG)"]
+          ports:
+            - containerPort: 8000
+          env:
+            - name: INTERVAL
+              value: "3"
+            - name: COUNT
+              value: "4"
+            - name: TEXT_ARG
+              value: "Interval = $(INTERVAL). Desired count of print = $(COUNT)."

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: demo-cm
+data:
+  # propery-like keys; each key maps to a simple value
+  INTERVAL: "6"
+  COUNT: "3"
+  # file-like keys
+  TEXT_ARG: |
+    Hello from World!
+    This is demo config!
+    As an example.

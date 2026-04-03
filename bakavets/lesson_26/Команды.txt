@@ -1,0 +1,51 @@
+kubectl apply -f bakavets\lesson_26\my_deployment_env.yml
+
+kubectl get pods -l app=http-server-1 -o custom-columns=:metadata.name
+
+kubectl exec -it deploy/my-deployment-env --container=my-container -- /bin/bash
+env
+
+
+kubectl apply -f bakavets\lesson_26\my_deployment_env_args.yml
+
+
+kubectl apply -f bakavets\lesson_26\my_config_map.yml
+kubectl apply -f bakavets\lesson_26\my_deployment_config_map.yml
+kubectl exec -it deploy/my-deployment-config-map --container=my-container -- /bin/bash
+ls -la
+cd config
+cat config.ini
+cat properties
+
+
+kubectl apply -f bakavets\lesson_26\my_pod_config_map.yml
+kubectl exec -it demo-pod --container=my-container -- /bin/bash
+
+kubectl get pods -l app=http-server-1 -o custom-columns=:metadata.uid
+
+minikube ssh
+sudo su
+cd /var/lib/kubelet/pods/b217e690-80a0-4ddc-96bd-0b9739c42e44/volumes/kubernetes.io~configmap/config
+# Здесь мы увидим файлы с параметрами, созданные конфиг-мапом (но эти файлы являются ссылками)
+ls
+ls -la
+# Сами файлы находятся здесь
+cd ..2026_04_03_15_33_22.24747306522e44
+ls -la
+
+
+kubectl apply -f my_config_map_2.yml
+kubectl apply -f my_deployment_config_map_2.yml
+
+
+kubectl create configmap nginx-config --from-file=nginx.conf
+kubectl describe configmap nginx-config
+
+kubectl create configmap config --from-literal=interval=7 --from-literal=count=3 --from-literal=config.ini="Hello from ConfigMap"
+kubectl describe configmap config
+
+kubectl create configmap my-config --from-file=configs/
+kubectl describe configmap my-config
+
+kubectl create configmap config-env-file --from-env-file=.env
+kubectl describe configmap config-env-file

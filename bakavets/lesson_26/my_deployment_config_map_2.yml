@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-config-map-2
+  labels:
+    app: my-deployment-config-map-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server-1
+  template:
+    metadata:
+      labels:
+        app: http-server-1
+    spec:
+      containers:
+        - name: my-container
+          image: bakavets/kuber:v1.0-args
+          args: ["$(INTERVAL)", "$(COUNT)", "$(TEXT_ARG)"]
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: demo-cm
+          # Добавит префикс переменным окружения внутри пода
+          #   prefix: _CONFIG
+          volumeMounts:
+            - name: "config"
+              mountPath: "/config"
+              # Можно монтировать файл вместо папки
+            # mountPath: "/config/my_file.txt"
+              # И можно указать subPath, чтобы указанная папка не затирала содержимое существующей папки
+              # Если использовать subPath, то, применив манифест, файл не обновится, пока не перезапустят под
+            # subPath: my_file.txt
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: demo-cm
+            # Если список items не указать, то в папке config появятся все параметры из configMap

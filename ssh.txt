@@ -1,0 +1,13 @@
+ssh-keygen
+
+ssh-copy-id root@192.168.122.11
+
+scp root@192.168.122.11:/etc/kubernetes/admin.conf /home/unixway/admin.conf
+
+export KUBECONFIG=/home/unixway/admin.conf
+
+ps aux | gre kube
+ll -ltnp | grep 6443
+
+ncat 192.168.122.14 31874
+info

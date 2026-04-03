@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment-config-map
+  labels:
+    app: my-deployment-config-map
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-server-1
+  template:
+    metadata:
+      labels:
+        app: http-server-1
+    spec:
+      containers:
+        - name: my-container
+          image: bakavets/kuber:v1.0-args
+          args: ["$(INTERVAL)", "$(COUNT)", "$(TEXT_ARG)"]
+          ports:
+            - containerPort: 8000
+          env:
+            - name: INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-cm
+                  key: interval
+            - name: COUNT
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-cm
+                  key: count
+            - name: TEXT_ARG
+              valueFrom:
+                configMapKeyRef:
+                  name: demo-cm
+                  key: properties
+          volumeMounts:
+            - name: "config"
+              mountPath: "/config"
+              readOnly: true
+      volumes:
+        - name: config
+          configMap:
+            name: demo-cm
+            # Если список items не указать, то в папке config появятся все параметры из configMap
+            items:
+              - key: "properties"
+                path: "properties"
+              - key: "config.ini"
+                path: "config.ini"
