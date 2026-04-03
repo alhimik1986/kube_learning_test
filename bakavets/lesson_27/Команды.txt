@@ -1,0 +1,53 @@
+kubectl create secret generic db-user-pass-from-file --from-file=bakavets/lesson_27/username.txt --from-file=bakavets/lesson_27/password.txt
+
+kubectl get secret db-user-pass-from-file -o yaml
+kubectl describe secret db-user-pass-from-file
+
+minikube ssh
+echo "c3VwZXJwYXNzMTIzNDU2Jio=" | base64 -d
+
+
+kubectl create secret generic db-user-pass-from-literal --from-literal=username=devuser --from-literal=password="P!S&*r$zDsY"
+
+kubectl get secret db-user-pass-from-file -o jsonpath='{.data}'
+kubectl get secret db-user-pass-from-literal -o jsonpath='{.data.password}' | base64 --decode
+
+
+kubectl apply -f bakavets\lesson_27\my_secret.yml
+kubectl apply -f bakavets\lesson_27\my_secret_no_encode.yml
+
+kubectl apply -f bakavets\lesson_27\my_deployment_env.yml
+kubectl exec -it deploy/my-deployment-env --container=my-container -- /bin/bash
+env
+
+kubectl apply -f bakavets\lesson_27\my_deployment_env2.yml
+kubectl exec -it deploy/my-deployment-env-2 --container=my-container -- /bin/bash
+env
+
+kubectl apply -f bakavets\lesson_27\my_deployment_secret_file.yml
+kubectl exec -it deploy/my-deployment-env-secret-file --container=my-container -- /bin/bash
+cd /etc/secrets/
+ls -la
+cat username
+cd ..2026_04_03_18_22_57.2803110504
+ls -la
+
+kubectl apply -f bakavets\lesson_27\my_deployment_secret_file_items.yml
+kubectl exec -it deploy/my-deployment-env-secret-file-items --container=my-container -- /bin/bash
+cd /etc/secrets/my-group
+ls -la
+cat my-username
+
+# Видим, что папка /etc/secrets вмонтирована в tmpfs (Temp File Storage - временное файловое хранилище, предназначенное для монтирования файловой системы, но размещается оно в оперативной памяти вместо физического диска). То есть секреты на диск не записываются, что является более безопасным. По возможности лучше использовать volumes в качестве секретов вместо ENV-переменных, иначе через ENV-переменные секреты могут попадать в логи или в дочерние процессы, неизвестно, куда ещё они могут попасть.
+df -h
+
+
+
+
+kubectl create secret docker-registry secret-docker-registry --docker-email=bakavets.com@gmail.com --docker-username=bakavets --docker-password=password --docker-server=https://index.docker.io/v1/
+
+kubectl apply -f bakavets\lesson_27\deploy-private.yaml
+kubectl apply -f bakavets\lesson_27\basic-auth.yaml
+kubectl apply -f bakavets\lesson_27\ssh-auth.yaml
+kubectl apply -f bakavets\lesson_27\tls.yaml
+
