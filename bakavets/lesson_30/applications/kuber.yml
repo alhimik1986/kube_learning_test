@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kuber
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: development
+  # Манифесты, которые мы хотим деплоить
+  source:
+    repoURL: https://github.com/alhimik1986/kube_learning_test.git
+    targetRevision: main
+    path: bakavets/lesson_30/dev/kuber
+  # В какой kubernetes-кластер мы хотим деплоить наши манифесты
+  # В нашем случае мы указываем тот, кластер, в котором argocd был установлен
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kuber
+
+  syncPolicy:
+    # Указываем automated, чтобы argocd проверял изменения в git-репозитории и автоматически применял их (по умолч. интервал проверки 3 мин)
+    automated: 
+      prune: true
+      selfHeal: true
+    syncOptions:
+      # Создаём namespace автоматически (spec.destination.namespace), если он ранее не был создан
+      - CreateNamespace=true

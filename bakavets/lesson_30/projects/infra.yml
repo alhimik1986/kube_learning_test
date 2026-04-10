@@ -1,0 +1,25 @@
+# https://argo-cd.readthedocs.io/en/stable/operator-manual/declarative-setup/#:~:text=apiVersion%3A%20argoproj.io,svc%0A%20%20%20%20namespace%3A%20guestbook
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infrastructure
+  namespace: argocd
+  # Finalizer нуже для того, чтобы убедиться, что проект не может быть удалён до тех пор, пока к нему привязаны какие-либо argocd-приложения
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Project containing development environment services
+  # Ссылки на репозитории, из которых приложения (в рамках проекта) могут извлекать манифесты, chart-файлы (т.е. исходные файлы)
+  # Здесь мы указали, что манифесты могут быть установлены из любых репозиториев
+  sourceRepos:
+    - '*'
+  # Указываем ссылки на кластера и пространства имён, в которые argocd-приложение, относящееся к этому проекту, может деплоить kubernetes-ресурсы
+  # Здесь мы указали, что мы можем управлять несколькими кластерами, используя один экземпляр argocd
+  # Здесь argocd приложения могут устанавливать kubernetes-объекты в различные kubernetes-кластера и в различные неймспейсы
+  destinations:
+    - namespace: '*'
+      server: '*'
+  # Здесь мы указываем, какие объекты кластерного уровня могут устанавливать argocd-приложения в рамках этого проекта
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
