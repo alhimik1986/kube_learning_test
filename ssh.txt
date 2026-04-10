@@ -1,3 +1,5 @@
+sudo apt-get install openssh-server
+sudo service ssh restart
 ssh-keygen
 
 ssh-copy-id root@192.168.122.11
@@ -11,3 +13,7 @@ ll -ltnp | grep 6443
 
 ncat 192.168.122.14 31874
 info
+
+
+# Посмотреть сетевые службы и порты в линуксе
+nano /etc/services

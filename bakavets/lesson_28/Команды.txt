@@ -1,0 +1,83 @@
+helm create bakavets/lesson_28/demo-chart
+
+helm install demo-app bakavets/lesson_28/demo-chart
+
+helm list --all-namespaces
+helm list
+helm status demo-app
+helm history demo-app
+
+# Делаем обновление изменённой конфигурации -helm-чарта.
+# Флаг --dry-run означает "сухой прогон", т.е. проверяет сможет ли kubernetes принять все файлы и обновиться, но не применяя самого обновления. Файлы для кубера срендерятся.
+# Флаг --debug выводит побольше логов, когда необходимо дебажить какую-нибудь проблему
+helm upgrade demo-app ./bakavets/lesson_28/demo-chart --debug --dry-run
+helm history demo-app
+
+helm upgrade demo-app ./bakavets/lesson_28/demo-chart --debug
+helm history demo-app
+
+
+helm install demo-app bakavets/lesson_28/demo-chart --dry-run
+
+# С флагом --wait helm будет ждать, пока все поды, сервисы и т.д. перейдут в состояние готовности и только после этого helm пометит релиз, как успешный (helm будет ждать до тех пор, пока не истечёт таймаут (по умолчанию 5 мин)).
+helm upgrade demo-app ./bakavets/lesson_28/demo-chart --debug --wait
+
+# Helm install options: https://helm.sh/docs/helm/helm_install/#options
+# Helm upgrade options: https://helm.sh/docs/helm/helm_upgrade/#options
+
+# Обновляем на заведомо несуществующую ревизию, чтобы при обновлении произошла ошибка
+helm upgrade demo-app ./bakavets/lesson_28/demo-chart --set image.tag=1.212121 --dry-run
+
+# Откатываемся на указанную ревизию
+helm rollback demo-app 5
+helm history demo-app
+
+# Флаг --atomit сделает откат на предыдущую ревизию, если обновление не будет успешным
+# Выставляем таймаут обновления 20 сек. вместо 5 мин, который стоит по умолчанию
+helm upgrade demo-app ./bakavets/lesson_28/demo-chart --set image.tag=1.212122 --debug --atomic --timeout 20s
+
+helm upgrade demo-app ./bakavets/lesson_28/demo-chart --set image.tag=1.212122 --debug --rollback-on-failure --timeout 20s
+
+# Флаг --install - означает установить приложение, если оно не установлено
+# demo-app-test - означает имя релиза
+# Флаг --create-namespace - означает создать нейпспейс, если его не существует
+helm upgrade --install demo-app-test ./bakavets/lesson_28/demo-chart -f ./bakavets/lesson_28/demo-chart/values-dev.yaml -n app --create-namespace --dry-run
+
+
+# Рендерить шаблон в конфигурационный файл без деплоя
+helm template demo-app-test ./bakavets/lesson_28/demo-chart -f ./bakavets/lesson_28/demo-chart/values-dev.yaml
+
+# Проверка синтаксиса шаблона (в папке templates) на ошибки
+helm lint ./bakavets/lesson_28/demo-chart
+
+# Заархивировать helm-проект
+helm package ./bakavets/lesson_28/demo-chart
+
+# Установить заархивированный проект
+helm upgrade --install demo-app-test demo-chart-0.1.0.tgz --dry-run
+
+# Посмотреть одну из ревизий хелма
+kubectl get secrets/sh.helm.release.v1.demo-app-test.v2 -n=app --template={{.data.release}} | base64 -D | base64 -D | gzip -cd > release_decoded
+
+# Удалить деплои хелма
+helm uninstall demo-app
+helm uninstall demo-app-test -n app
+
+# Добавляем репозиторий в хелм, чтобы из него можно было установить кастомные проекты
+# Указываем произвольное имя репозитория (prometheus-community)
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+
+# Выполняем эту команду, чтобы убетиться, что мы получаем последнюю версию чарта в этом репозитории
+helm repo update 
+
+# my-prometheus - название релиза
+# prometheus-community имя репозитория, которое мы указывали выше, добавляя репозиторий
+# kube-prometheus-stack - название чарта, который мы хотим установить
+helm install my-prometheus prometheus-community/kube-prometheus-stack
+
+helm search repo prometheus-community/kube-prometheus-stack
+
+helm pull prometheus-community/kube-prometheus-stack
+
+
+
