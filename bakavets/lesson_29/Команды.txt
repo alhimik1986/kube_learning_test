@@ -1,0 +1,53 @@
+helm repo add chartmuseum https://chartmuseum.github.io/charts
+helm repo update chartmuseum
+helm search repo chartmuseum -l
+
+helm pull chartmuseum/chartmuseum -d ./bakavets/lesson_29/
+
+helm install chartmuseum -f ./bakavets/lesson_29/chartmuseum-values.yaml chartmuseum/chartmuseum -n chartmuseum --create-namespace --dry-run
+
+helm install chartmuseum -f ./bakavets/lesson_29/chartmuseum-values.yaml chartmuseum/chartmuseum -n chartmuseum --create-namespace
+или
+helm install chartmuseum -f ./bakavets/lesson_29/chartmuseum-local-values.yaml chartmuseum/chartmuseum -n chartmuseum --create-namespace
+
+kubectl port-forward svc/chartmuseum 8080:8080 -n chartmuseum
+
+helm repo add my-chartmuseum http://localhost:8080 -n chartmuseum
+helm repo update my-chartmuseum
+helm search repo my-chartmuseum
+helm create ./bakavets/lesson_29/app
+helm package ./bakavets/lesson_29/app -d ./bakavets/lesson_29
+
+curl --data-binary "@bakavets/lesson_29/app-0.1.0.tgz" http://localhost:8080/api/charts
+helm search repo my-chartmuseum -l
+helm repo update my-chartmuseum
+helm search repo my-chartmuseum -l
+
+helm install my-app my-chartmuseum/app --dry-run
+helm package ./bakavets/lesson_29/app -d ./bakavets/lesson_29
+curl --data-binary "@bakavets/lesson_29/app-0.2.0.tgz" http://localhost:8080/api/charts
+helm repo update my-chartmuseum
+helm search repo my-chartmuseum -l
+
+helm create ./bakavets/lesson_29/demo-app
+helm package ./bakavets/lesson_29/demo-app -d ./bakavets/lesson_29
+curl --data-binary "@bakavets/lesson_29/demo-app-0.1.0.tgz" http://localhost:8080/api/charts
+helm repo update my-chartmuseum
+helm search repo my-chartmuseum
+helm search repo my-chartmuseum -l
+
+curl -X DELETE http://localhost:8080/api/charts/app/0.2.0
+helm repo update my-chartmuseum
+helm search repo my-chartmuseum -l
+
+helm upgrade chartmuseum -f ./bakavets/lesson_29/chartmuseum-local-auth-values.yaml chartmuseum/chartmuseum -n chartmuseum --create-namespace --dry-run
+
+helm upgrade chartmuseum -f ./bakavets/lesson_29/chartmuseum-local-auth-values.yaml chartmuseum/chartmuseum -n chartmuseum --create-namespace
+
+helm repo update my-chartmuseum
+helm repo add --username admin --password mypassword my-chartmuseum http://localhost:8080 --force-update
+helm repo update my-chartmuseum
+curl --user admin:mypassword --data-binary "@bakavets/lesson_29/app-0.2.0.tgz" http://localhost:8080/api/charts
+curl --user admin:mypassword -X DELETE http://localhost:8080/api/charts/app/0.2.0
+
+

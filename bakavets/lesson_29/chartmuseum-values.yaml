@@ -1,0 +1,15 @@
+env:
+  open:
+    STORAGE: amazon
+    STORAGE_AMAZON_BUCKET: demo-helm-chartmuseum
+    STORAGE_AMAZON_PREFIX:
+    STORAGE_AMAZON_REGION: eu-north-1
+
+    AWS_SDK_LOAD_CONFIG: true
+    DISABLE_API: false
+
+serviceAccount:
+  create: true
+  name: "chartmuseum"
+  annotations: 
+    eks.amazonaws.com/role-arn: arn:aws:iam:849634744839:role/demo-eks-cluster
