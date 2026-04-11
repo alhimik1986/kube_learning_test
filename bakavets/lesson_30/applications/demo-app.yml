@@ -13,20 +13,20 @@ spec:
     targetRevision: main
     path: bakavets/lesson_30/charts/demo
 
+    # Здесь мы можем указать helm-параметры 3-мя разными способами
     helm:
-      # Extra parameters to set (same as setting through values.yaml, but these take precedence)
+      # В виде списка имём параметров и их значений (1-й приоритет)
       parameters:
       - name: "service.port"
         value: "8082"
       # - name: "replicaCount"
       #   value: "4"
 
-      # Helm values files for overriding values in the helm chart
-      # The path is relative to the spec.source.path directory defined above
+      # В виде файла (пути к файлу) (3-й приоритет)
       valueFiles:
       - values-dev.yaml
 
-      # Values file as block file
+      # В блочном виде (2-й приоритет)
       values: |
         # replicaCount: 2
         serviceAccount:

@@ -9,3 +9,8 @@ Ytt5JoWpxkHlRPaN
 kubectl apply -f ./bakavets/lesson_30/projects
 
 kubectl apply -f ./bakavets/lesson_30/applications/kuber.yml
+
+
+kubectl apply -f ./bakavets/lesson_30/applications/demo-app.yml
+
+kubectl apply -f ./bakavets/lesson_30/applications/ingress-nginx.yaml
